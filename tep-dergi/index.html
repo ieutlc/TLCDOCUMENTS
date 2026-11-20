@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TEP | Dijital broşür</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101e35;color:#f4f7fc;font:16px system-ui,sans-serif}
+main{min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:12px 16px}
+header,nav{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;width:100%;max-width:1120px;margin:auto}
+strong{letter-spacing:.05em}
+header a{color:#cddbf0;font-size:.9rem}
+.room{display:grid;place-items:center;min-width:0}
+.book{--columns:2;position:relative;display:grid;grid-template-columns:repeat(var(--columns),minmax(0,1fr));width:min(100%,1120px,calc((100dvh - 140px) * 1.414));box-shadow:0 18px 48px #0005;perspective:1800px;touch-action:pan-y}
+.sheet{position:relative;min-width:0;aspect-ratio:421.125/595.5;background:#fff}
+.sheet img{display:block;width:100%;height:100%}
+.hotspot{position:absolute;border-radius:4px}
+.hotspot:focus-visible{outline:3px solid #e9782d;background:#ed82263b}
+.turn{position:absolute;top:0;bottom:0;width:calc(100% / var(--columns));z-index:2;pointer-events:none;backface-visibility:hidden}
+.turn img{width:100%;height:100%;display:block}
+.turn.forward{right:0;transform-origin:left;animation:next .46s ease-in-out forwards}
+.turn.backward{left:0;transform-origin:right;animation:back .46s ease-in-out forwards}
+@keyframes next{to{transform:rotateY(-112deg);filter:brightness(.65);opacity:0}}
+@keyframes back{to{transform:rotateY(112deg);filter:brightness(.65);opacity:0}}
+nav{justify-content:center}
+button,select{border:1px solid #586983;border-radius:8px;background:#253653;color:#fff;font:inherit;padding:8px 11px;min-height:42px}
+button:not(:disabled){cursor:pointer}
+button:disabled{opacity:.46}
+button:hover:not(:disabled){background:#3c5172}
+button:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #ffa35b;outline-offset:3px}
+#status{font-size:.86rem;min-width:5.4em;text-align:center;font-variant-numeric:tabular-nums}
+@media(max-width:660px){main{padding:10px 8px}.book{--columns:1;width:min(100%,calc((100dvh - 165px)*.707))}.sheet:nth-child(2){display:none}button,select{font-size:.84rem;padding:7px}#status{min-width:auto}}
+@media(max-height:420px){.book{min-width:min(64%,350px)}}
+@media(prefers-reduced-motion:reduce){.turn{display:none}}
+</style>
+</head>
+<body>
+<main>
+<header><strong>TEP · Dijital broşür</strong><a href="tep-brosur.pdf?v=2" target="_blank" rel="noopener">PDF’yi aç ↗</a></header>
+<div class="room"><div class="book" id="book">
+ <div class="sheet"><img alt="TEP broşür kapağı" src="sayfalar/01.webp?v=2"></div>
+ <div class="sheet"><img alt="Program hakkında" src="sayfalar/02.webp?v=2"></div>
+</div></div>
+<nav aria-label="Sayfa gezintisi">
+ <button id="prev" type="button" aria-label="Önceki sayfa">←</button>
+ <span id="status" role="status"></span>
+ <button id="next" type="button" aria-label="Sonraki sayfa">→</button>
+ <select id="jump" aria-label="Bölüme git"></select>
+ <button id="full" type="button">Tam ekran</button>
+</nav>
+</main>
+<script>
+const titles = ['Kapak','Program hakkında','Kademe seçimi','Öğretimin Temelleri','Gelişim Rotaları','Öğretme ve Öğrenme Araştırmaları','Takvim ve muafiyet','Başvuru ve bilgi'];
+const book = document.querySelector('#book');
+const sheets = [...book.querySelectorAll('.sheet')];
+const prev = document.querySelector('#prev');
+const next = document.querySelector('#next');
+const jump = document.querySelector('#jump');
+const status = document.querySelector('#status');
+const full = document.querySelector('#full');
+const compact = matchMedia('(max-width: 660px)');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+const url = index => 'sayfalar/' + String(index + 1).padStart(2, '0') + '.webp?v=2';
+const links = [
+  {label:'Öğretme ve Öğrenme Merkezi', href:'https://www.ieu.edu.tr/tlc/tr', x:61.5, y:70.45, w:20.8, h:2.2}
+];
+titles.forEach((title, index) => jump.add(new Option(title, index)));
+let selected = 0;
+let shown = 0;
+const step = () => compact.matches ? 1 : 2;
+function render(index, animate = false) {
+  const old = shown;
+  selected = Math.max(0, Math.min(titles.length - 1, index));
+  shown = Math.floor(selected / step()) * step();
+  book.querySelector('.turn')?.remove();
+  if (animate && old !== shown && !reduce.matches) {
+    const forward = shown > old;
+    const turning = document.createElement('div');
+    turning.className = 'turn ' + (forward ? 'forward' : 'backward');
+    turning.setAttribute('aria-hidden','true');
+    const image = new Image();
+    image.alt = '';
+    image.src = url(old + (forward ? step() - 1 : 0));
+    turning.append(image);
+    book.append(turning);
+    turning.addEventListener('animationend', () => turning.remove(), {once:true});
+  }
+  sheets.forEach((sheet, i) => {
+    const page = shown + i;
+    if (i >= step()) return;
+    const img = sheet.querySelector('img');
+    img.src = url(page);
+    img.alt = (page + 1) + '. sayfa · ' + titles[page];
+    sheet.querySelectorAll('a').forEach(link => link.remove());
+    if (page === 7) for (const item of links) {
+      const anchor = document.createElement('a');
+      anchor.className = 'hotspot';
+      anchor.href = item.href;
+      anchor.target = '_blank';
+      anchor.rel = 'noopener';
+      anchor.setAttribute('aria-label', item.label);
+      Object.assign(anchor.style,{left:item.x+'%',top:item.y+'%',width:item.w+'%',height:item.h+'%'});
+      sheet.append(anchor);
+    }
+  });
+  status.textContent = (shown + 1) + (step() === 2 ? '–' + (shown + 2) : '') + ' / ' + titles.length;
+  jump.value = selected;
+  prev.disabled = shown === 0;
+  next.disabled = shown + step() >= titles.length;
+}
+function advance(direction) {
+  if ((direction < 0 && prev.disabled) || (direction > 0 && next.disabled)) return;
+  render(shown + direction * step(), true);
+}
+prev.addEventListener('click', () => advance(-1));
+next.addEventListener('click', () => advance(1));
+jump.addEventListener('change', () => render(Number(jump.value), true));
+compact.addEventListener('change', () => render(selected));
+document.addEventListener('keydown', event => {
+  if (event.target.matches('select, input, textarea') || event.altKey || event.ctrlKey || event.metaKey) return;
+  if (['ArrowLeft','ArrowRight'].includes(event.key)) {
+    event.preventDefault();
+    advance(event.key === 'ArrowRight' ? 1 : -1);
+  }
+});
+let start;
+book.addEventListener('touchstart', event => {start = event.touches[0];}, {passive:true});
+book.addEventListener('touchend', event => {
+  if (!start) return;
+  const end = event.changedTouches[0];
+  const dx = end.clientX - start.clientX;
+  if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(end.clientY - start.clientY)) advance(dx < 0 ? 1 : -1);
+  start = null;
+}, {passive:true});
+full.hidden = !document.fullscreenEnabled;
+full.addEventListener('click', async () => {
+  try {
+    if (document.fullscreenElement) await document.exitFullscreen();
+    else await document.documentElement.requestFullscreen();
+  } catch { window.open(location.href, '_blank', 'noopener'); }
+});
+document.addEventListener('fullscreenchange', () => full.textContent = document.fullscreenElement ? 'Tam ekrandan çık' : 'Tam ekran');
+render(0);
+for (let i=0;i<titles.length;i++) { const preload = new Image(); preload.src = url(i); }
+</script>
+</body>
+</html>
