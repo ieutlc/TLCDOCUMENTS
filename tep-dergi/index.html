@@ -33,7 +33,7 @@ button:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #ffa
 </head>
 <body>
 <main>
-<header><strong>TEP · Dijital broşür</strong><a href="tep-brosur.pdf?v=2" target="_blank" rel="noopener">PDF’yi aç ↗</a></header>
+<header><strong>TEP · Dijital broşür</strong><a href="tep-brosur.pdf?v=4" target="_blank" rel="noopener">PDF’yi aç ↗</a></header>
 <div class="stage" id="stage">
  <canvas id="flip" role="img" aria-label="TEP broşürü"></canvas>
  <div id="hot"></div>
@@ -53,10 +53,13 @@ button:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #ffa
 /* ---------- İçerik ---------- */
 const titles = ['Kapak','Program hakkında','Kademe seçimi','Öğretimin Temelleri','Gelişim Rotaları','Öğretme ve Öğrenme Araştırmaları','Takvim ve muafiyet','Başvuru ve bilgi'];
 const links = [
-  {page:7, label:'Öğretme ve Öğrenme Merkezi', href:'https://www.ieu.edu.tr/tlc/tr', x:61.5, y:70.45, w:20.8, h:2.2}
+  {page:7, label:'Detaylı bilgi: learn.ieu.edu.tr', href:'https://learn.ieu.edu.tr', x:8.3, y:69.2, w:25, h:3.2},
+  {page:7, label:'Başvuru: my.ieu.edu.tr', href:'https://my.ieu.edu.tr/', x:4.6, y:74.2, w:42, h:7.4},
+  {page:7, label:'TLC e-posta: tlc@ieu.edu.tr', href:'mailto:tlc@ieu.edu.tr', x:58, y:69.2, w:23, h:3.2},
+  {page:7, label:'TLC telefon: 0 232 488 58 03', href:'tel:+902324885803', x:58, y:72.7, w:23, h:3.2}
 ];
 const ASPECT = 1116 / 1579;            // sayfa genişlik / yükseklik
-const url = i => 'sayfalar/' + String(i + 1).padStart(2, '0') + '.webp?v=2';
+const url = i => 'sayfalar/' + String(i + 1).padStart(2, '0') + '.webp?v=4';
 
 /* ---------- DOM ---------- */
 const $ = s => document.querySelector(s);
@@ -303,7 +306,8 @@ function draw() {
 /* ---------- Bağlantı alanları ---------- */
 const hotEls = links.map(item => {
   const a = document.createElement('a');
-  a.className = 'hotspot'; a.href = item.href; a.target = '_blank'; a.rel = 'noopener';
+  a.className = 'hotspot'; a.href = item.href;
+  if (/^https?:/.test(item.href)) { a.target = '_blank'; a.rel = 'noopener'; }
   a.setAttribute('aria-label', item.label);
   a.hidden = true;
   hot.append(a);
