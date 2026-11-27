@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TEP – Öğretimde Yetkinlik Geliştirme Programı</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:transparent}
+body{font-family:Poppins,system-ui,-apple-system,"Segoe UI",sans-serif;padding:4px 2px}
+
+.teplang{font-family:inherit;color:#1f2433;max-width:960px;margin:0 auto}
+.teplang .teplang-radio{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.teplang .teplang-tabs{display:inline-flex;gap:4px;padding:4px;margin:0 0 20px;background:#f1f3f8;border-radius:12px}
+.teplang .teplang-tabs label{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:9px;cursor:pointer;font-size:14px;font-weight:500;color:#6b7280;transition:background .15s,color .15s,box-shadow .15s;user-select:none}
+.teplang .teplang-tabs label:hover{color:#1f2433}
+.teplang .teplang-code{font-size:11px;font-weight:600;letter-spacing:.04em;padding:2px 6px;border-radius:6px;background:#e3e7ef;color:#6b7280}
+#teplang-tr:checked ~ .teplang-tabs label[for="teplang-tr"],
+#teplang-en:checked ~ .teplang-tabs label[for="teplang-en"]{background:#fff;color:#1e3a8a;box-shadow:0 1px 3px rgba(16,24,40,.12)}
+#teplang-tr:checked ~ .teplang-tabs label[for="teplang-tr"] .teplang-code,
+#teplang-en:checked ~ .teplang-tabs label[for="teplang-en"] .teplang-code{background:#e8661c;color:#fff}
+#teplang-tr:focus-visible ~ .teplang-tabs label[for="teplang-tr"],
+#teplang-en:focus-visible ~ .teplang-tabs label[for="teplang-en"]{outline:2px solid #1e3a8a;outline-offset:2px}
+#teplang-tr:checked ~ .teplang-en,
+#teplang-en:checked ~ .teplang-tr{display:none}
+.teplang .teplang-section{margin:0 0 28px}
+.teplang .teplang-section h3{margin:0 0 4px;font-size:18px;font-weight:600}
+.teplang .teplang-section p{margin:0 0 12px;color:#6b7280;font-size:14px;line-height:1.6}
+.teplang .teplang-frame{position:relative;width:100%;border-radius:14px;overflow:hidden;background:#0f172a;box-shadow:0 1px 2px rgba(16,24,40,.06),0 6px 20px rgba(16,24,40,.08)}
+.teplang .teplang-frame.video{aspect-ratio:16/9}
+.teplang .teplang-frame.book{height:600px;background:#f1f3f8}
+.teplang .teplang-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.teplang .teplang-btn{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:9px 16px;border-radius:10px;background:#f1f3f8;color:#1e3a8a !important;text-decoration:none !important;font-size:14px;font-weight:500}
+.teplang .teplang-btn:hover{background:#e3e7ef}
+.teplang .teplang-cta{margin:8px 0 12px;padding:32px;border-radius:20px;background:linear-gradient(135deg,#1e3a8a 0%,#2d4fb8 100%);color:#fff;box-shadow:0 12px 32px rgba(30,58,138,.25)}
+.teplang .teplang-cta-badge{display:inline-block;margin-bottom:10px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.15);font-size:12px;font-weight:600;letter-spacing:.06em;color:#fff}
+.teplang .teplang-cta h3{margin:0 0 6px;font-size:26px;font-weight:700;color:#fff;line-height:1.25}
+.teplang .teplang-cta p{margin:0;font-size:15px;line-height:1.6;color:#d3dcf7}
+.teplang .teplang-steps{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0 26px;padding:0}
+.teplang .teplang-steps li{display:flex;align-items:center;gap:12px;margin:0;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);font-size:14px;line-height:1.4;color:#fff}
+.teplang .teplang-steps li span{flex:none;width:30px;height:30px;border-radius:50%;background:#e8661c;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.teplang .teplang-cta-btn{display:inline-flex;align-items:center;gap:10px;padding:15px 30px;border-radius:14px;background:#e8661c;color:#fff !important;text-decoration:none !important;font-size:17px;font-weight:600;box-shadow:0 8px 20px rgba(232,102,28,.45);transition:background .15s,transform .15s}
+.teplang .teplang-cta-btn:hover{background:#f07a33;transform:translateY(-1px)}
+.teplang .teplang-cta-btn b{font-size:20px;line-height:1}
+@media (max-width:640px){
+  .teplang .teplang-frame.book{height:440px}
+  .teplang .teplang-cta{padding:24px}
+  .teplang .teplang-cta h3{font-size:22px}
+  .teplang .teplang-steps{grid-template-columns:1fr}
+  .teplang .teplang-cta-btn{width:100%;justify-content:center}
+}
+
+</style>
+</head>
+<body>
+<div class="teplang">
+
+
+<input class="teplang-radio" type="radio" name="teplang" id="teplang-tr" checked>
+<input class="teplang-radio" type="radio" name="teplang" id="teplang-en">
+
+<div class="teplang-tabs" role="tablist">
+  <label for="teplang-tr"><span class="teplang-code">TR</span>Türkçe</label>
+  <label for="teplang-en"><span class="teplang-code">EN</span>English</label>
+</div>
+
+<!-- ================= TÜRKÇE ================= -->
+<div class="teplang-tr" lang="tr">
+  <div class="teplang-section">
+    <h3>TEP Tanıtım Videosu</h3>
+    <p>Öğretimde Yetkinlik Geliştirme Programı'nı kısaca tanıyın.</p>
+    <div class="teplang-frame video" style="position:relative;aspect-ratio:16/9;">
+      <iframe src="https://www.youtube-nocookie.com/embed/Mb5doC9ywfw?enablejsapi=1" title="TEP Tanıtım Videosu" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="teplang-section">
+    <h3>TEP Dijital Broşür</h3>
+    <p>Program hakkında tüm ayrıntılar dijital broşürde.</p>
+    <div class="teplang-frame book" style="position:relative;height:600px;">
+      <iframe src="https://ieutlc.github.io/TLCDOCUMENTS/tep-dergi/" title="TEP Dijital Broşür" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe>
+    </div>
+    <a class="teplang-btn" href="https://ieutlc.github.io/TLCDOCUMENTS/tep-dergi/" target="_blank" rel="noopener">Broşürü tam ekran aç ↗</a>
+  </div>
+
+  <div class="teplang-cta" style="padding:32px;border-radius:20px;background:#1e3a8a;color:#fff;">
+    <span class="teplang-cta-badge">BAŞVURU</span>
+    <h3>TEP'e hemen başvurun</h3>
+    <p>Başvurular myIEU üzerinden alınmaktadır. Üç adımda tamamlayın:</p>
+    <ol class="teplang-steps">
+      <li><span>1</span><div>myIEU'ya giriş yapın</div></li>
+      <li><span>2</span><div><strong>Uygulamalar</strong> sayfasına gidin</div></li>
+      <li><span>3</span><div><strong>TEP</strong> uygulamasını açın</div></li>
+    </ol>
+    <a class="teplang-cta-btn" href="https://my.ieu.edu.tr/login" target="_blank" rel="noopener" style="background:#e8661c;color:#fff;">myIEU'ya git ve başvur <b>→</b></a>
+  </div>
+</div>
+
+<!-- ================= ENGLISH ================= -->
+<div class="teplang-en" lang="en">
+  <div class="teplang-section">
+    <h3>TEP Promotional Video</h3>
+    <p>A short introduction to the TEP program.</p>
+    <div class="teplang-frame video" style="position:relative;aspect-ratio:16/9;">
+      <iframe src="https://www.youtube-nocookie.com/embed/Jm_s4bnTHS4?enablejsapi=1" title="TEP Promotional Video" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="teplang-section">
+    <h3>TEP Digital Brochure</h3>
+    <p>Find all the details about the program in the digital brochure.</p>
+    <div class="teplang-frame book" style="position:relative;height:600px;">
+      <iframe src="https://ieutlc.github.io/TLCDOCUMENTS/tep-dergi-en/" title="TEP Digital Brochure" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe>
+    </div>
+    <a class="teplang-btn" href="https://ieutlc.github.io/TLCDOCUMENTS/tep-dergi-en/" target="_blank" rel="noopener">Open brochure full screen ↗</a>
+  </div>
+
+  <div class="teplang-cta" style="padding:32px;border-radius:20px;background:#1e3a8a;color:#fff;">
+    <span class="teplang-cta-badge">APPLICATION</span>
+    <h3>Apply to TEP now</h3>
+    <p>Applications are submitted through myIEU. Complete it in three steps:</p>
+    <ol class="teplang-steps">
+      <li><span>1</span><div>Log in to myIEU</div></li>
+      <li><span>2</span><div>Go to the <strong>Applications</strong> page</div></li>
+      <li><span>3</span><div>Open the <strong>TEP</strong> app</div></li>
+    </ol>
+    <a class="teplang-cta-btn" href="https://my.ieu.edu.tr/login" target="_blank" rel="noopener" style="background:#e8661c;color:#fff;">Go to myIEU and apply <b>→</b></a>
+  </div>
+</div>
+</div>
+
+<script>
+(function(){
+  function pauseAll(){
+    document.querySelectorAll('iframe[src*="youtube"]').forEach(function(f){
+      try{f.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}','*');}catch(e){}
+    });
+  }
+  document.querySelectorAll('.teplang-radio').forEach(function(r){ r.addEventListener('change', pauseAll); });
+  var q=new URLSearchParams(location.search).get('lang');
+  if(q==='en'){ document.getElementById('teplang-en').checked=true; }
+})();
+</script>
+</body>
+</html>
